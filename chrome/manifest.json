@@ -1,0 +1,25 @@
+{
+    "name": "Twitch Snooper",
+    "description": "Preview live streams when hovering over twitch streams",
+    "version": "0.1.0",
+    "manifest_version": 2,
+    "icons": {
+        "16": "images/img-16x16.png",
+        "32": "images/img-32x32.png",
+        "48": "images/img-48x48.png",
+        "128": "images/img-128x128.png"
+    },
+    "background": {
+        "scripts": [ "main/background.js"]
+    },
+    "browser_action": {
+        "default_icon": "images/img-48x48.png",
+        "default_popup": "popups/popup.html",
+        "default_title": "Twitch Snooper"
+    },
+    "permissions": [
+        "storage",
+        "tabs",
+        "https://www.google.com/*"
+    ]
+}
