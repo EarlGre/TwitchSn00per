@@ -4,10 +4,10 @@
     "version": "0.1.0",
     "manifest_version": 2,
     "icons": {
-        "16": "images/img-16x16.png",
-        "32": "images/img-32x32.png",
-        "48": "images/img-48x48.png",
-        "128": "images/img-128x128.png"
+        "16": "16xSn00per.png",
+        "32": "32xSn00per.png",
+        "48": "48xSn00per.png",
+        "128": "128xSn00per.png"
     },
     "background": {
         "scripts": [ "main/background.js"]
