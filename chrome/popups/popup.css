@@ -11,7 +11,9 @@
 	margin-bottom: 5px;
 }
 #TP_popup_logo {
-    margin-top: -10px;
+    margin-top: 0px;
+	margin-bottom: 10px;
+	border-radius: 17%;
 }
 #TP_popup_sub_container {
     padding: 10px;
@@ -105,7 +107,7 @@ input.apple-switch:checked:after {
     height: inherit;
     font-size: 12px;
     text-transform: uppercase;
-    background: #a600ff;
+    background: #00a310;
     border-radius: inherit;
     box-shadow: inset 0 1px 2px rgba(0, 0, 0.12, 0.12), inset 0 0 2px rgba(0, 0, 0.15, 0.15);
 }
@@ -134,7 +136,7 @@ input.apple-switch:checked:after {
     opacity: 0;
 }
 .switch-input:checked ~ .switch-label {
-    background: limegreen;
+    background: #a600ff;
     box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.15), inset 0 0 3px rgba(0, 0, 0, 0.2);
 }
 .switch-input:checked ~ .switch-label:before {
@@ -197,16 +199,6 @@ input.apple-switch:checked:after {
     transition: opacity .2s;
 }
 
-.slider:hover {
-	background: whitesmoke;
-	
-	.slider::-webkit-slider-thumb {
-		width: 35px;
-		height: 35px;
-		border-radius: 40%;
-	}
-}
-
 .slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
@@ -217,10 +209,21 @@ input.apple-switch:checked:after {
     cursor: pointer;
 }
 
+.slider:hover {
+	background: whitesmoke;
+}
+
+.slider:hover::-webkit-slider-thumb {
+	width: 30px;
+    height: 30px;
+    border-radius: 45%;
+}
+
 .slider::-webkit-slider-thumb:hover {
     width: 35px;
     height: 35px;
     border-radius: 40%;
+	align: center;
 }
 
 
