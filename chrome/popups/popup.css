@@ -3,7 +3,7 @@
     font-family: Helvetica, sans-serif;
 	text-align: center;
     color: whitesmoke;
-	font-size: 14px;
+	
 }
 #TPBodyEl > h2 {
     text-align: center;
@@ -31,7 +31,8 @@
     padding-top: 15px;
     padding-bottom: 5px;
     font-size: 14px;
-    margin-top: 0;
+    margin-top: 0px;
+	margin-bottom: 0px;
 }
 
 input.apple-switch {
@@ -184,7 +185,12 @@ input.apple-switch:checked:after {
 .slide-container {
     margin-top: 20px;
     width: 100%;
+	font-family: Helvetica, sans-serif;
+	text-align: center;
+    /* border-top: 1px solid whitesmoke; */
     font-weight: bold;
+    font-size: 12px;
+    margin-top: 15px;
 }
 
 .slider {
@@ -196,6 +202,7 @@ input.apple-switch:checked:after {
     outline: none;
     -webkit-transition: .2s;
     transition: opacity .2s;
+    margin-top: -3px;
 }
 
 .slider::-webkit-slider-thumb {
