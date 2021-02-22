@@ -30,6 +30,7 @@
     font-weight: bold;
     padding-top: 15px;
     padding-bottom: 5px;
+	padding-right: 3px;
     font-size: 14px;
     margin-top: 0px;
 	margin-bottom: 0px;
@@ -148,7 +149,7 @@ input.apple-switch:checked:after {
 .switch-handle {
     position: absolute;
     top: 4px;
-    left: 1px;
+    left: 2px;
     width: 29px;
     height: 29px;
     background: linear-gradient(to bottom, #FFFFFF 40%, #f0f0f0);
@@ -170,7 +171,7 @@ input.apple-switch:checked:after {
     box-shadow: inset 0 1px rgba(0, 0, 0, 0.02);
 }
 .switch-input:checked ~ .switch-handle {
-    left: 76px;
+    left: 69px;
     box-shadow: -1px 1px 5px rgba(0, 0, 0, 0.2);
 }
 /* Transition
@@ -229,6 +230,17 @@ input.apple-switch:checked:after {
     width: 35px;
     height: 35px;
     border-radius: 40%;
+}
+
+.volumeslide-container {
+    margin-top: 20px;
+    width: 100%;
+	font-family: Helvetica, sans-serif;
+	text-align: center;
+    /* border-top: 1px solid whitesmoke; */
+    font-weight: bold;
+    font-size: 12px;
+    margin-top: 15px;
 }
 
 
