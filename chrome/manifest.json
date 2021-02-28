@@ -18,6 +18,15 @@
         "default_popup": "popups/popup.html",
         "default_title": "Twitch Snooper"
     },
+    "content_scripts": [
+        {
+            "matches": ["https://www.twitch.tv/*"],
+            "css": ["main/css.css"],
+            "js": ["main/core.js"],
+            "run_at": "document_end",
+            "all_frames": true
+        }
+    ],
     "permissions": [
         "storage",
         "tabs",
