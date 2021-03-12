@@ -1,14 +1,23 @@
 #TPBodyEl {
-    background-color: #232323;
-    text-align: center;
+    background-color: #262626;
+    font-family: Helvetica, sans-serif;
+	text-align: center;
     color: whitesmoke;
+	
 }
 #TPBodyEl > h2 {
     text-align: center;
     margin-top: -5px;
+	margin-bottom: 5px;
 }
 #TP_popup_logo {
-    margin-top: -10px;
+    margin-top: 0px;
+	margin-bottom: 10px;
+	border-radius: 17%;
+}
+#TP_text_logo {
+	margin-top: -12px;
+	margin-bottom: -10px;
 }
 #TP_popup_sub_container {
     padding: 10px;
@@ -19,27 +28,16 @@
 }
 
 .TP_popup_sidebar_feature_title {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+	font-family: Helvetica, sans-serif;
+	text-align: center;
     border-top: 1px solid whitesmoke;
     font-weight: bold;
     padding-top: 15px;
     padding-bottom: 5px;
+	padding-right: 3px;
     font-size: 14px;
-    margin-top: 0;
-}
-
-.TP_popup_dirp_feature_title {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    /*margin-top: 30px;
-    border-top: 1px solid whitesmoke;
-    padding-bottom: 5px;
-    padding-top: 25px;*/
-    font-weight: bold;
-    font-size: 12px;
+    margin-top: 0px;
+	margin-bottom: 0px;
 }
 
 input.apple-switch {
@@ -85,22 +83,10 @@ input.apple-switch:checked:after {
     flex: 2;
 }
 
-#TP_popup_donation_container {
-    margin-top: 20px;
-    text-align: center;
-    border-top: 1px solid whitesmoke;
-    padding-top: 15px;
-}
-
-#TP_popup_donation_container > form {
-    margin-top: 15px;
-}
-
 .switch {
     margin: auto 10px;
     position: relative;
     display: block;
-    vertical-align: top;
     width: 133px;
     height: 30px;
     padding: 3px;
@@ -124,14 +110,15 @@ input.apple-switch:checked:after {
     position: relative;
     display: block;
     height: inherit;
-    font-size: 10px;
+    font-size: 12px;
     text-transform: uppercase;
-    background: dodgerblue;
+    background: #a600ff;
     border-radius: inherit;
-    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.12), inset 0 0 2px rgba(0, 0, 0, 0.15);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0.12, 0.12), inset 0 0 2px rgba(0, 0, 0.15, 0.15);
 }
 .switch-label:before, .switch-label:after {
-    position: absolute;
+	
+	position: absolute;
     top: 50%;
     margin-top: -.5em;
     line-height: 1;
@@ -144,7 +131,7 @@ input.apple-switch:checked:after {
     content: attr(data-off);
     right: 11px;
     color: #FFFFFF;
-    text-shadow: 0 1px rgba(0, 0, 0, 0.2);
+    text-shadow: 0 1px rgba(0, 0, 0.3, 0.3);
 }
 .switch-label:after {
     content: attr(data-on);
@@ -154,7 +141,7 @@ input.apple-switch:checked:after {
     opacity: 0;
 }
 .switch-input:checked ~ .switch-label {
-    background: limegreen;
+    background: #00a310;
     box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.15), inset 0 0 3px rgba(0, 0, 0, 0.2);
 }
 .switch-input:checked ~ .switch-label:before {
@@ -166,7 +153,7 @@ input.apple-switch:checked:after {
 .switch-handle {
     position: absolute;
     top: 4px;
-    left: 4px;
+    left: 2px;
     width: 29px;
     height: 29px;
     background: linear-gradient(to bottom, #FFFFFF 40%, #f0f0f0);
@@ -188,7 +175,7 @@ input.apple-switch:checked:after {
     box-shadow: inset 0 1px rgba(0, 0, 0, 0.02);
 }
 .switch-input:checked ~ .switch-handle {
-    left: 74px;
+    left: 69px;
     box-shadow: -1px 1px 5px rgba(0, 0, 0, 0.2);
 }
 /* Transition
@@ -203,7 +190,12 @@ input.apple-switch:checked:after {
 .slide-container {
     margin-top: 20px;
     width: 100%;
+	font-family: Helvetica, sans-serif;
+	text-align: center;
+    /* border-top: 1px solid whitesmoke; */
     font-weight: bold;
+    font-size: 12px;
+    margin-top: 15px;
 }
 
 .slider {
@@ -213,13 +205,9 @@ input.apple-switch:checked:after {
     border-radius: 5px;
     background: #d3d3d3;
     outline: none;
-    opacity: 0.7;
     -webkit-transition: .2s;
     transition: opacity .2s;
-}
-
-.slider:hover {
-    opacity: 1;
+    margin-top: -3px;
 }
 
 .slider::-webkit-slider-thumb {
@@ -228,29 +216,36 @@ input.apple-switch:checked:after {
     width: 25px;
     height: 25px;
     border-radius: 50%;
-    background: limegreen;
+    background: #a600ff;
     cursor: pointer;
 }
 
-.slider::-moz-range-thumb {
-    width: 25px;
-    height: 25px;
-    border-radius: 50%;
-    background: limegreen;
-    cursor: pointer;
+.slider:hover {
+	background: whitesmoke;
 }
 
-.TP_popup_bottom_bar {
-    display: flex;
-    margin-top: 5px;
+.slider:hover::-webkit-slider-thumb {
+	width: 30px;
+    height: 30px;
+    border-radius: 45%;
 }
 
-.TP_popup_bottom_bar div {
-    flex: 1;
-    padding: 8px;
-    cursor: pointer;
+.slider::-webkit-slider-thumb:hover {
+    width: 35px;
+    height: 35px;
+    border-radius: 40%;
 }
 
-.TP_popup_bottom_bar div:hover {
-    background-color: #9246ff;
+.volumeslide-container {
+    margin-top: 20px;
+    width: 100%;
+	font-family: Helvetica, sans-serif;
+	text-align: center;
+    /* border-top: 1px solid whitesmoke; */
+    font-weight: bold;
+    font-size: 12px;
+    margin-top: 15px;
 }
+
+
+
