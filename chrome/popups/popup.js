@@ -60,7 +60,7 @@ function setSliderAndViewValues(value) {
 
 function setVolumeValues(value) {
     volumeSlider.value = value ? value:70;
-    volumeOutput.innerHTML = volumeSlider.value + "%";
+    volumeOutput.innerHTML = volumeSlider.value + "px";
 }
 
 document.addEventListener('DOMContentLoaded', function () {
