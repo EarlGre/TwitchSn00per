@@ -1,8 +1,5 @@
 var slider;
-var volumeSlider;
 var output;
-var volumeOutput;
-
 
 function changePreviewMode(isImagePreviewMode){
     chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
@@ -49,18 +46,9 @@ function changePreviewSize(width) {
     });
 }
 
-function changeVolumeSize(width) {
-
-}
-
 function setSliderAndViewValues(value) {
     slider.value = value ? value:440;
     output.innerHTML = slider.value + "px";
-}
-
-function setVolumeValues(value) {
-    volumeSlider.value = value ? value:70;
-    volumeOutput.innerHTML = volumeSlider.value + "%";
 }
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -124,7 +112,7 @@ document.addEventListener('DOMContentLoaded', function () {
     slider.max = 1000;
 
     try {
-        chrome.storage.sync.get('volumeSize', function(result) {
+        chrome.storage.sync.get('previewSize', function(result) {
             if (typeof result.previewSize == 'undefined') {
                 setSliderAndViewValues(null);
             } else {
@@ -141,31 +129,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     slider.oninput = function() {
         output.innerHTML = this.value + "px";
-    }
-
-    volumeSlider = document.getElementById("TP_popup_volume_mixer_input_slider");
-    volumeOutput = document.getElementById("TP_popup_volume_mixer_display");
-    slider.min = 0;
-    slider.max = 100;
-
-    try {
-        chrome.storage.sync.get('volume', function(result) {
-            if (typeof result.previewSize == 'undefined') {
-                setVolumeValues(null);
-            } else {
-                setVolumeValues(result.volume.width);
-            }
-        });
-    } catch (e) {
-        setVolumeValues(null);
-    }
-
-    slider.onchange = function() {
-        changeVolumeSize(this.value);
-    }
-
-    slider.oninput = function() {
-        output.innerHTML = this.value + "%";
     }
 
     var donate_btn = document.getElementById('tp_popup_donate_btn');
