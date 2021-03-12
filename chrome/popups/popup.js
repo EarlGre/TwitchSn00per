@@ -1,7 +1,7 @@
 var slider;
-var volumeSlider;
+var volumeslider;
 var output;
-var volumeOutput;
+var volumeoutput;
 
 
 function changePreviewMode(isImagePreviewMode){
@@ -22,23 +22,23 @@ function changeDirectoryPreviewMode(isDirpEnabled){
     });
 }
 
-function changeChannelPointsClickerMode(isChannelPointsClickerEnabled){
-    chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
-        chrome.tabs.sendMessage(tabs[0].id, {action: "update_ChannelPointsClickerMode", isChannelPointsClickerEnabled: isChannelPointsClickerEnabled})
-    });
-    chrome.runtime.sendMessage({action: "bg_update_ChannelPointsClickerMode", detail: isChannelPointsClickerEnabled}, function(response) {
+// function changeChannelPointsClickerMode(isChannelPointsClickerEnabled){
+//     chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
+//         chrome.tabs.sendMessage(tabs[0].id, {action: "update_ChannelPointsClickerMode", isChannelPointsClickerEnabled: isChannelPointsClickerEnabled})
+//     });
+//     chrome.runtime.sendMessage({action: "bg_update_ChannelPointsClickerMode", detail: isChannelPointsClickerEnabled}, function(response) {
 
-    });
-}
+//     });
+// }
 
-function changeIsErrRefreshEnabled(isErrRefreshEnabled){
-    chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
-        chrome.tabs.sendMessage(tabs[0].id, {action: "update_isErrRefreshEnabled", isErrRefreshEnabled: isErrRefreshEnabled})
-    });
-    chrome.runtime.sendMessage({action: "bg_update_isErrRefreshEnabled", detail: isErrRefreshEnabled}, function(response) {
+// function changeIsErrRefreshEnabled(isErrRefreshEnabled){
+//     chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
+//         chrome.tabs.sendMessage(tabs[0].id, {action: "update_isErrRefreshEnabled", isErrRefreshEnabled: isErrRefreshEnabled})
+//     });
+//     chrome.runtime.sendMessage({action: "bg_update_isErrRefreshEnabled", detail: isErrRefreshEnabled}, function(response) {
 
-    });
-}
+//     });
+// }
 
 function changePreviewSize(width) {
     chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
@@ -59,8 +59,8 @@ function setSliderAndViewValues(value) {
 }
 
 function setVolumeValues(value) {
-    volumeSlider.value = value ? value:70;
-    volumeOutput.innerHTML = volumeSlider.value + "%";
+    volumeslider.value = value ? value:70;
+    volumeoutput.innerHTML = volumeslider.value + "%";
 }
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -69,54 +69,34 @@ document.addEventListener('DOMContentLoaded', function () {
 
     });
 
-    var previewModeCheckbox = document.getElementById('TP_popup_preview_mode_checkbox');
-    chrome.storage.sync.get('isImagePreviewMode', function(result) {
-        previewModeCheckbox.checked = typeof result.isImagePreviewMode == 'undefined' ? false : !result.isImagePreviewMode;
-    });
-    previewModeCheckbox.addEventListener('change', (event) => {
-        if (event.target.checked) {
-            changePreviewMode(false);
-        } else {
-            changePreviewMode(true);
+    window.onload = function() {
+        var previewModeCheckbox = document.getElementById('TP_popup_preview_mode_checkbox');
+        if(previewModeCheckbox) {
+            chrome.storage.sync.get('isImagePreviewMode', function(result) {
+                previewModeCheckbox.checked = typeof result.isImagePreviewMode == 'undefined' ? false : !result.isImagePreviewMode;
+            });
+            previewModeCheckbox.addEventListener('change', (event) => {
+                if (event.target.checked) {
+                    changePreviewMode(false);
+                } else {
+                    changePreviewMode(true);
+                }
+            });
         }
-    });
 
-    var directoryPreviewCheckbox = document.getElementById('TP_popup_directory_preview_mode_checkbox');
-    chrome.storage.sync.get('isDirpEnabled', function(result) {
-        directoryPreviewCheckbox.checked = typeof result.isDirpEnabled == 'undefined' ? true : result.isDirpEnabled;
-    });
-    directoryPreviewCheckbox.addEventListener('change', (event) => {
-        if (event.target.checked) {
-            changeDirectoryPreviewMode(true);
-        } else {
-            changeDirectoryPreviewMode(false);
+        var directoryPreviewCheckbox = document.getElementById('TP_popup_directory_preview_mode_checkbox');
+        if(directoryPreviewCheckbox) {
+            chrome.storage.sync.get('isDirpEnabled', function(result) {
+                directoryPreviewCheckbox.checked = typeof result.isDirpEnabled == 'undefined' ? true : result.isDirpEnabled;
+            });
+            directoryPreviewCheckbox.addEventListener('change', (event) => {
+                if (event.target.checked) {
+                    changeDirectoryPreviewMode(true);
+                } else {
+                    changeDirectoryPreviewMode(false);
+                }
+            });
         }
-    });
-
-    var ChannelPointsCheckbox = document.getElementById('TP_popup_channel_points_checkbox');
-    chrome.storage.sync.get('isChannelPointsClickerEnabled', function(result) {
-        ChannelPointsCheckbox.checked = typeof result.isChannelPointsClickerEnabled == 'undefined' ? false : result.isChannelPointsClickerEnabled;
-    });
-    ChannelPointsCheckbox.addEventListener('change', (event) => {
-        if (event.target.checked) {
-            changeChannelPointsClickerMode(true);
-        } else {
-            changeChannelPointsClickerMode(false);
-        }
-    });
-
-
-    var errRefreshCheckbox = document.getElementById('TP_popup_err_refresh_checkbox');
-    chrome.storage.sync.get('isErrRefreshEnabled', function(result) {
-        errRefreshCheckbox.checked = typeof result.isErrRefreshEnabled == 'undefined' ? false : result.isErrRefreshEnabled;
-    });
-    errRefreshCheckbox.addEventListener('change', (event) => {
-        if (event.target.checked) {
-            changeIsErrRefreshEnabled(true);
-        } else {
-            changeIsErrRefreshEnabled(false);
-        }
-    });
 
     slider = document.getElementById("TP_popup_preview_size_input_slider");
     output = document.getElementById("TP_popup_preview_size_display");
@@ -126,7 +106,7 @@ document.addEventListener('DOMContentLoaded', function () {
     try {
         chrome.storage.sync.get('volumeSize', function(result) {
             if (typeof result.previewSize == 'undefined') {
-                setSliderAndViewValues(null);
+                setSliderAndViewValues(420);
             } else {
                 setSliderAndViewValues(result.previewSize.width);
             }
@@ -143,15 +123,15 @@ document.addEventListener('DOMContentLoaded', function () {
         output.innerHTML = this.value + "px";
     }
 
-    volumeSlider = document.getElementById("TP_popup_volume_mixer_input_slider");
-    volumeOutput = document.getElementById("TP_popup_volume_mixer_display");
-    slider.min = 0;
-    slider.max = 100;
+    volumeslider = document.getElementById("TP_popup_volume_mixer_input_slider");
+    volumeoutput = document.getElementById("TP_popup_volume_mixer_display");
+    volumeslider.min = 0;
+    volumeslider.max = 100;
 
     try {
         chrome.storage.sync.get('volume', function(result) {
             if (typeof result.previewSize == 'undefined') {
-                setVolumeValues(null);
+                setVolumeValues(69);
             } else {
                 setVolumeValues(result.volume.width);
             }
@@ -160,35 +140,35 @@ document.addEventListener('DOMContentLoaded', function () {
         setVolumeValues(null);
     }
 
-    slider.onchange = function() {
+    volumeslider.onchange = function() {
         changeVolumeSize(this.value);
     }
 
-    slider.oninput = function() {
-        output.innerHTML = this.value + "%";
+    volumeslider.oninput = function() {
+        volumeoutput.innerHTML = this.value + "%";
     }
 
-    var donate_btn = document.getElementById('tp_popup_donate_btn');
-    donate_btn.addEventListener('click', (event) => {
-        chrome.runtime.sendMessage({action: "bg_donate_btn_click", detail: ""}, function(response) {
+    // var donate_btn = document.getElementById('tp_popup_donate_btn');
+    // donate_btn.addEventListener('click', (event) => {
+    //     chrome.runtime.sendMessage({action: "bg_donate_btn_click", detail: ""}, function(response) {
 
-        });
-    });
+    //     });
+    // });
 
-    var rate_btn = document.getElementById('tp_popup_rate_btn');
-    rate_btn.addEventListener('click', (event) => {
-        chrome.tabs.create({url:"https://chrome.google.com/webstore/detail/twitch-previews/hpmbiinljekjjcjgijnlbmgcmoonclah/reviews/"});
-        chrome.runtime.sendMessage({action: "bg_rate_btn_click", detail: ""}, function(response) {
+    // var rate_btn = document.getElementById('tp_popup_rate_btn');
+    // rate_btn.addEventListener('click', (event) => {
+    //     chrome.tabs.create({url:"https://chrome.google.com/webstore/detail/twitch-previews/hpmbiinljekjjcjgijnlbmgcmoonclah/reviews/"});
+    //     chrome.runtime.sendMessage({action: "bg_rate_btn_click", detail: ""}, function(response) {
 
-        });
-    });
+    //     });
+    // });
 
-    var share_btn = document.getElementById('tp_popup_share_btn');
-    share_btn.addEventListener('click', (event) => {
-        chrome.tabs.create({url:"https://chrome.google.com/webstore/detail/twitch-previews/hpmbiinljekjjcjgijnlbmgcmoonclah/"});
-        chrome.runtime.sendMessage({action: "bg_share_btn_click", detail: ""}, function(response) {
+    // var share_btn = document.getElementById('tp_popup_share_btn');
+    // share_btn.addEventListener('click', (event) => {
+    //     chrome.tabs.create({url:"https://chrome.google.com/webstore/detail/twitch-previews/hpmbiinljekjjcjgijnlbmgcmoonclah/"});
+    //     chrome.runtime.sendMessage({action: "bg_share_btn_click", detail: ""}, function(response) {
 
-        });
-    });
-
+    //     });
+    // });
+    }
 });

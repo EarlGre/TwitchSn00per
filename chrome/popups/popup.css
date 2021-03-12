@@ -247,5 +247,43 @@ input.apple-switch:checked:after {
     margin-top: 15px;
 }
 
+.volumeslider {
+    -webkit-appearance: none;
+    width: 92%;
+    height: 15px;
+    border-radius: 5px;
+    background: #d3d3d3;
+    outline: none;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+    margin-top: -3px;
+}
+
+.volumeslider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #a600ff;
+    cursor: pointer;
+}
+
+.volumeslider:hover {
+	background: whitesmoke;
+}
+
+.volumeslider:hover::-webkit-slider-thumb {
+	width: 30px;
+    height: 30px;
+    border-radius: 45%;
+}
+
+.volumeslider::-webkit-slider-thumb:hover {
+    width: 35px;
+    height: 35px;
+    border-radius: 40%;
+}
+
 
 
