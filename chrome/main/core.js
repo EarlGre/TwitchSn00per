@@ -90,6 +90,7 @@ function createAndShowDirectoryPreview() {
         previewDiv.appendChild(twitchIframe);
     }
     
+    // when the mouse leaves the preview window, the preview will stop displaying
     previewDiv.onmouseleave = function () {
         isHovering = false;
         clearExistingPreviewDivs(TP_PREVIEW_DIV_CLASSNAME);
@@ -132,6 +133,8 @@ function clearOverlays(navCardEl, isFromDirectory) {
 
 // Mouse listeners are used to find out if the video should be previewed or not
 function setDirectoryMouseOverListeners(navCardEl) {
+    
+    // when the mouse is over a channel card, it will run a function that displays the preview and removes the overlay
     navCardEl.onmouseover = function () {
         if (previewDiv) {
             clearExistingPreviewDivs(TP_PREVIEW_DIV_CLASSNAME);
@@ -154,6 +157,15 @@ function setDirectoryMouseOverListeners(navCardEl) {
         }, 1000)
 
     };
+
+    // when the mouse leaves the channel card, the preview will stop displaying
+    navCardEl.onmouseleave = function () {
+        if (previewDiv && previewDiv.style.visibility === "hidden") {
+            clearExistingPreviewDivs(TP_PREVIEW_DIV_CLASSNAME);
+            isHovering = false;
+        }
+    }
+
 }
 
 // For each twitch link in the directory, it will set a listener for the mouse
@@ -182,10 +194,6 @@ function clearExistingPreviewDivs(className, isFromPip) {
         if (previewDivs[i]) {
             previewDivs[i].parentNode.removeChild(previewDivs[i]);
         }
-    }
-    if (!isFromPip) {
-        previewDiv = null;
-        twitchIframe = null;
     }
 }
 
