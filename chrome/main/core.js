@@ -90,6 +90,11 @@ function createAndShowDirectoryPreview() {
         previewDiv.appendChild(twitchIframe);
     }
     
+    previewDiv.onmouseleave = function () {
+        isHovering = false;
+        clearExistingPreviewDivs(TP_PREVIEW_DIV_CLASSNAME);
+    }
+
     lastHoveredCardEl.parentNode.appendChild(previewDiv);
 }
 
@@ -128,21 +133,14 @@ function clearOverlays(navCardEl, isFromDirectory) {
 // Mouse listeners are used to find out if the video should be previewed or not
 function setDirectoryMouseOverListeners(navCardEl) {
     navCardEl.onmouseover = function () {
-        
+        if (previewDiv) {
+            clearExistingPreviewDivs(TP_PREVIEW_DIV_CLASSNAME);
+        }
         isHovering = true;
         lastHoveredCardEl = navCardEl;
-        
-        if (isImagePreviewMode == false) {
-            return;
-        }
 
         createAndShowDirectoryPreview();
 
-        previewDiv.onmouseleave = function() {
-            isHovering = false;
-            clearExistingPreviewDivs(TP_PREVIEW_DIV_CLASSNAME);
-        }
-        
         setTimeout(function () {
             if (twitchIframe && twitchIframe.contentDocument && twitchIframe.contentDocument.querySelector('video')) {
                 if (isStreamerOnline(lastHoveredCardEl)) {
@@ -202,86 +200,9 @@ function setTitleMutationObserverForDirectoryCardsRefresh() {
     });
 }
 
-
-// sets the preview mode to image or video
-function setViewMode() {
-    try {
-        chrome.storage.sync.get('isImagePreviewMode', function(result) {
-            if (typeof result.isImagePreviewMode == 'undefined') {
-                isImagePreviewMode = true;
-            } else {
-                if(isImagePreviewMode) {
-                    if (isImagePreviewMode !== result.isImagePreviewMode) {
-                        onPreviewModeChange(result.isImagePreviewMode, false);
-                    }
-                } else {
-                    isImagePreviewMode = result.isImagePreviewMode;
-                }
-            }
-        });
-    } catch (e) {
-        onPreviewModeChange(true, false);
-    }
-}
-
-
-// changes the preview mode and saves it to google storage
-function onPreviewModeChange(imagePreviewMode, saveToStorage) {
-    isImagePreviewMode = imagePreviewMode;
-    clearExistingPreviewDivs(TP_PREVIEW_DIV_CLASSNAME);
-
-    if (saveToStorage) {
-        chrome.storage.sync.set({'isImagePreviewMode': imagePreviewMode}, function() {
-
-        });
-    }
-}
-
-
-// listens for changes made on the extension popup page
-chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
-
-    switch(msg.action) {
-        case "update_imagePreviewMode":
-            onPreviewModeChange(msg.isImagePreviewMode, true);
-            break;
-        case "update_previewSize":
-            onPreviewSizeChange(msg.width);
-            break;
-    }
-});
-
-
-// gets the saved settings from google storage
-function ga_report_appStart() {
-    var size = "440px";
-    var mode = "image";
-
-    try {
-        chrome.storage.sync.get('previewSize', function(result) {
-            if (typeof result.previewSize == 'undefined') {
-
-            } else {
-                size = result.previewSize.width + "px";
-            }
-
-            chrome.storage.sync.get('isImagePreviewMode', function(result) {
-                if (typeof result.isImagePreviewMode == 'undefined') {
-
-                } else {
-                    mode = result.isImagePreviewMode ? "Image":"Video";
-                }
-            });
-        });
-    } catch (e) {
-
-    }
-}
-
 // when the page is fully loaded, run all of the functions
 window.addEventListener('load', (event) => {
     setTimeout(function(){
-        setViewMode();
         setTitleMutationObserverForDirectoryCardsRefresh()
         refreshDirectoryNavCardsListAndListeners()
     }, 2000);
