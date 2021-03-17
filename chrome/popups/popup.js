@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function () {
     slider.max = 1000;
 
     try {
-        chrome.storage.sync.get('volumeSize', function(result) {
+        chrome.storage.sync.get('previewSize', function(result) {
             if (typeof result.previewSize == 'undefined') {
                 setSliderAndViewValues(420);
             } else {

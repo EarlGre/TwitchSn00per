@@ -70,14 +70,14 @@ function createAndShowDirectoryPreview() {
     previewDiv.style.left = "0px";
     previewDiv.style.top = "0px";
     var calculatedSize = lastHoveredCardEl.getBoundingClientRect();//getCalculatedPreviewSizeByWidth(document.querySelector(".root-scrollable").getBoundingClientRect().width * 0.35);
-    previewDiv.style.width = calculatedSize.width + "px";
-    previewDiv.style.height = calculatedSize.height + "px";
+    previewDiv.style.width = calculatedSize.width + PREVIEWDIV_WIDTH + "px";
+    previewDiv.style.height = calculatedSize.height + PREVIEWDIV_HEIGHT + "px";
     previewDiv.style.display = "block";
 
     if(isStreamerOnline(lastHoveredCardEl)) {
         twitchIframe = createIframeElement();
-        twitchIframe.width = calculatedSize.width + "px";
-        twitchIframe.height = calculatedSize.height + "px";
+        twitchIframe.width = calculatedSize.width + PREVIEWDIV_WIDTH + "px";
+        twitchIframe.height = calculatedSize.height + PREVIEWDIV_HEIGHT + "px";
         twitchIframe.src = getPreviewStreamUrl(lastHoveredCardEl);
         previewDiv.style.visibility = "hidden";
         previewDiv.appendChild(twitchIframe);
@@ -260,6 +260,51 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
     }
 });
 
+// sets the preview size from google sync
+function setPreviewSizeFromStorage() {
+    if (previewDiv) {
+        clearExistingPreviewDivs(TP_PREVIEW_DIV_CLASSNAME);
+    }
+
+    try {
+        chrome.storage.sync.get('previewSize', function(result) {
+            if (typeof result.previewSize == 'undefined') {
+                setPreviewSize(getCalculatedPreviewSizeByWidth(PREVIEWDIV_WIDTH));
+            } else {
+                setPreviewSize(result.previewSize);
+            }
+        });
+    } catch (e) {
+        setPreviewSize(getCalculatedPreviewSizeByWidth(PREVIEWDIV_WIDTH));
+    }
+}
+
+
+// get the calculated size
+function getCalculatedPreviewSizeByWidth (width) {
+    return {width: width, height: 0.5636363636363636 * width};
+}
+
+
+// set the preview size
+function setPreviewSize(previewSizeObj) {
+    PREVIEWDIV_WIDTH = previewSizeObj.width;
+    PREVIEWDIV_HEIGHT = previewSizeObj.height;
+}
+
+
+
+// changes the preview size
+function onPreviewSizeChange(width) {
+    clearExistingPreviewDivs(TP_PREVIEW_DIV_CLASSNAME);
+    var previewSizeObj = getCalculatedPreviewSizeByWidth(width);
+    setPreviewSize(previewSizeObj);
+
+    chrome.storage.sync.set({'previewSize': previewSizeObj}, function() {
+
+    });
+
+}
 
 // gets the saved settings from google storage
 function ga_report_appStart() {
@@ -291,7 +336,9 @@ function ga_report_appStart() {
 // when the page is fully loaded, run all of the functions
 window.addEventListener('load', (event) => {
     setTimeout(function(){
+        ga_report_appStart();
         setViewMode();
+        setPreviewSizeFromStorage();
         setTitleMutationObserverForDirectoryCardsRefresh()
         refreshDirectoryNavCardsListAndListeners()
     }, 2000);
