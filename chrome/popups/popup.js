@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', function () {
     try {
         chrome.storage.sync.get('previewSize', function(result) {
             if (typeof result.previewSize == 'undefined') {
-                setSliderAndViewValues(420);
+                setSliderAndViewValues(null);
             } else {
                 setSliderAndViewValues(result.previewSize.width);
             }
