@@ -84,8 +84,8 @@ function createAndShowDirectoryPreview() {
     } else {
         previewDiv.style.backgroundImage = getPreviewOfflineImageUrl();
         twitchIframe = createIframeElement();
-        twitchIframe.width = calculatedSize.width + "px";
-        twitchIframe.height = calculatedSize.height + "px";
+        twitchIframe.width = calculatedSize.width + PREVIEWDIV_WIDTH + "px";
+        twitchIframe.height = calculatedSize.height + PREVIEWDIV_HEIGHT + "px";
         twitchIframe.style.display = "none";
         previewDiv.appendChild(twitchIframe);
     }
@@ -97,8 +97,20 @@ function createAndShowDirectoryPreview() {
     }
 
     lastHoveredCardEl.parentElement.parentElement.appendChild(previewDiv);
-}
 
+    // if the preview is out of the viewport, then it will not adjust the preview size according to user
+    isOut = isOutOfViewport(twitchIframe);
+    isOut2 = isOutOfViewport(previewDiv);
+    if(isOut2.any) {
+        previewDiv.style.width = calculatedSize.width + "px";
+        previewDiv.style.height = calculatedSize.height + "px";
+
+    }
+    if(isOut.any) {
+        twitchIframe.style.width = calculatedSize.width + "px";
+        twitchIframe.style.height = calculatedSize.height + "px";
+    }
+}
 
 // waits for the video player to load, then displays the video player.
 function waitForVidPlayAndShow(navCardEl, isFromDirectory) {
@@ -296,6 +308,22 @@ function onPreviewSizeChange(width) {
 
 }
 
+// finds out if the displaying preview is in the viewport
+var isOutOfViewport = function (elem) {
+
+	// Get element's bounding
+	var bounding = elem.getBoundingClientRect();
+
+	// Check if it's out of the viewport on each side
+	var out = {};
+	out.top = bounding.top < 0;
+	out.left = bounding.left < 0;
+	out.bottom = bounding.bottom > (window.innerHeight || document.documentElement.clientHeight);
+	out.right = bounding.right > (window.innerWidth || document.documentElement.clientWidth);
+	out.any = out.top || out.left || out.bottom || out.right;
+	out.all = out.top && out.left && out.bottom && out.right;
+	return out;
+};
 
 // listens for changes made on the extension popup page
 chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
@@ -311,36 +339,9 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
 });
 
 
-// gets the saved settings from google storage
-function ga_report_appStart() {
-    var size = "440px";
-    var mode = "image";
-
-    try {
-        chrome.storage.sync.get('previewSize', function(result) {
-            if (typeof result.previewSize == 'undefined') {
-
-            } else {
-                size = result.previewSize.width + "px";
-            }
-
-            chrome.storage.sync.get('isImagePreviewMode', function(result) {
-                if (typeof result.isImagePreviewMode == 'undefined') {
-
-                } else {
-                    mode = result.isImagePreviewMode ? "Image":"Video";
-                }
-            });
-        });
-    } catch (e) {
-
-    }
-}
-
 // when the page is fully loaded, run all of the functions
 window.addEventListener('load', (event) => {
     setTimeout(function(){
-        ga_report_appStart();
         setViewMode();
         setPreviewSizeFromStorage();
         setTitleMutationObserverForDirectoryCardsRefresh()
