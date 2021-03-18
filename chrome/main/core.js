@@ -131,33 +131,6 @@ function clearOverlays(navCardEl, isFromDirectory) {
 
 }
 
-function getCalculatedPreviewSizeByWidth (width) {
-    return {width: width, height: 0.5636363636363636 * width};
-}
-
-function setPreviewSize(previewSizeObj) {
-    PREVIEWDIV_WIDTH = previewSizeObj.width;
-    PREVIEWDIV_HEIGHT = previewSizeObj.height;
-}
-
-function setPreviewSizeFromStorage() {
-    if (previewDiv) {
-        clearExistingPreviewDivs(TP_PREVIEW_DIV_CLASSNAME);
-    }
-
-    try {
-        chrome.storage.sync.get('previewSize', function(result) {
-            if (typeof result.previewSize == 'undefined') {
-                setPreviewSize(getCalculatedPreviewSizeByWidth(PREVIEWDIV_WIDTH));
-            } else {
-                setPreviewSize(result.previewSize);
-            }
-        });
-    } catch (e) {
-        setPreviewSize(getCalculatedPreviewSizeByWidth(PREVIEWDIV_WIDTH));
-    }
-}
-
 // Mouse listeners are used to find out if the video should be previewed or not
 function setDirectoryMouseOverListeners(navCardEl) {
     
@@ -337,51 +310,6 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
     }
 });
 
-// sets the preview size from google sync
-function setPreviewSizeFromStorage() {
-    if (previewDiv) {
-        clearExistingPreviewDivs(TP_PREVIEW_DIV_CLASSNAME);
-    }
-
-    try {
-        chrome.storage.sync.get('previewSize', function(result) {
-            if (typeof result.previewSize == 'undefined') {
-                setPreviewSize(getCalculatedPreviewSizeByWidth(PREVIEWDIV_WIDTH));
-            } else {
-                setPreviewSize(result.previewSize);
-            }
-        });
-    } catch (e) {
-        setPreviewSize(getCalculatedPreviewSizeByWidth(PREVIEWDIV_WIDTH));
-    }
-}
-
-
-// get the calculated size
-function getCalculatedPreviewSizeByWidth (width) {
-    return {width: width, height: 0.5636363636363636 * width};
-}
-
-
-// set the preview size
-function setPreviewSize(previewSizeObj) {
-    PREVIEWDIV_WIDTH = previewSizeObj.width;
-    PREVIEWDIV_HEIGHT = previewSizeObj.height;
-}
-
-
-
-// changes the preview size
-function onPreviewSizeChange(width) {
-    clearExistingPreviewDivs(TP_PREVIEW_DIV_CLASSNAME);
-    var previewSizeObj = getCalculatedPreviewSizeByWidth(width);
-    setPreviewSize(previewSizeObj);
-
-    chrome.storage.sync.set({'previewSize': previewSizeObj}, function() {
-
-    });
-
-}
 
 // gets the saved settings from google storage
 function ga_report_appStart() {
@@ -402,9 +330,6 @@ function ga_report_appStart() {
                 } else {
                     mode = result.isImagePreviewMode ? "Image":"Video";
                 }
-                chrome.runtime.sendMessage({action: "appStart", detail: mode + " : " + size + " : " + dirp + " : " + errRefresh + " : " + channelPointsClicker}, function(response) {
-
-                });
             });
         });
     } catch (e) {
@@ -422,18 +347,3 @@ window.addEventListener('load', (event) => {
         refreshDirectoryNavCardsListAndListeners()
     }, 2000);
 });
-
-window.addEventListener('visibilitychange', function() {
-    !document.hidden && pageAwakened();
-});
-
-function pageAwakened() {
-    if (isMainPlayerError) {
-        refreshPageOnMainTwitchPlayerError();
-    }
-    setViewMode();
-    setPreviewSizeFromStorage();
-    //setDirectoryPreviewMode();
-    //setChannelPointsClickerMode();
-    //setIsErrRefreshEnabled();
-}
