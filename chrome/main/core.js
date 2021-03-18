@@ -303,9 +303,20 @@ function onPreviewSizeChange(width) {
     setPreviewSize(previewSizeObj);
 
     chrome.storage.sync.set({'previewSize': previewSizeObj}, function() {
-
     });
+}
 
+// changes the volume size
+function setVolumeValues(volume) {
+    //PUT CODE IN HERE TO ACTUALLY SET THE VOLUME SIZE
+}
+
+// saves the volume size
+function onVolumeChange(volume) {
+    setVolumeValues(volume);
+
+    chrome.storage.sync.set({'volume': volume}, function() {
+    });
 }
 
 // finds out if the displaying preview is in the viewport
@@ -334,6 +345,9 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
             break;
         case "update_previewSize":
             onPreviewSizeChange(msg.width);
+            break;
+        case "update_volumeSize":
+            onVolumeChange(msg.volume);
             break;
     }
 });

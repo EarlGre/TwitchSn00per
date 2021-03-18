@@ -1,5 +1,3 @@
-
-
 var slider;
 var volumeslider;
 var output;
@@ -51,8 +49,13 @@ function changePreviewSize(width) {
     });
 }
 
-function changeVolumeSize(width) {
+function changeVolumeSize(volume) {
+    chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
+        chrome.tabs.sendMessage(tabs[0].id, {action: "update_volumeSize", volume: volume})
+    });
+    chrome.runtime.sendMessage({action: "bg_update_volumeSize", detail: volume + "%"}, function(response) {
 
+    });
 }
 
 function setSliderAndViewValues(value) {
@@ -134,10 +137,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     try {
         chrome.storage.sync.get('volume', function(result) {
-            if (typeof result.previewSize == 'undefined') {
+            if (typeof result.volume == 'undefined') {
                 setVolumeValues(69);
             } else {
-                setVolumeValues(result.volume.width);
+                setVolumeValues(result.volume);
             }
         });
     } catch (e) {

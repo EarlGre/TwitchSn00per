@@ -57,6 +57,9 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
         case "bg_update_previewSize":
             ga('send', 'event', 'preview_size', 'change', msg.detail);
             break;
+        case "bg_update_volumeSize":
+            ga('send', 'event', 'volume_size', 'change', msg.detail);
+            break;
         case "bg_popup_opened":
             ga('send', 'event', 'popup_opened', 'popup.html', 'popup.html');
             break;
