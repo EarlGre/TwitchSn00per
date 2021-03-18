@@ -54,7 +54,7 @@ function changeVolumeSize(width) {
 }
 
 function setSliderAndViewValues(value) {
-    slider.value = value ? value:440;
+    slider.value = value ? value:0;
     output.innerHTML = slider.value + "px";
 }
 
@@ -100,13 +100,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     slider = document.getElementById("TP_popup_preview_size_input_slider");
     output = document.getElementById("TP_popup_preview_size_display");
-    slider.min = 300;
-    slider.max = 1000;
+    slider.min = 0;
+    slider.max = 500;
 
     try {
-        chrome.storage.sync.get('volumeSize', function(result) {
+        chrome.storage.sync.get('previewSize', function(result) {
             if (typeof result.previewSize == 'undefined') {
-                setSliderAndViewValues(420);
+                setSliderAndViewValues(0);
             } else {
                 setSliderAndViewValues(result.previewSize.width);
             }

@@ -7,8 +7,8 @@ var isDirpEnabled = true;
 var isChannelPointsClickerEnabled = false;
 var channelPointsClickerInterval = null;
 var twitchIframe;
-var PREVIEWDIV_WIDTH = 440;
-var PREVIEWDIV_HEIGHT = 248;
+var PREVIEWDIV_WIDTH = 0;
+var PREVIEWDIV_HEIGHT = 0;
 var isHovering = false;
 var lastHoveredCardEl = null;
 var TP_PREVIEW_DIV_CLASSNAME = "twitch_previews_previewDiv";
@@ -67,17 +67,17 @@ function createPreviewDiv(cssClass) {
 function createAndShowDirectoryPreview() {
     previewDiv = createPreviewDiv(TP_PREVIEW_DIV_CLASSNAME);
     previewDiv.style.position = "absolute";
-    previewDiv.style.left = "0px";
-    previewDiv.style.top = "0px";
+    previewDiv.style.left = "6px";
+    previewDiv.style.top = "-6px";
     var calculatedSize = lastHoveredCardEl.getBoundingClientRect();//getCalculatedPreviewSizeByWidth(document.querySelector(".root-scrollable").getBoundingClientRect().width * 0.35);
-    previewDiv.style.width = calculatedSize.width + "px";
-    previewDiv.style.height = calculatedSize.height + "px";
+    previewDiv.style.width = calculatedSize.width + PREVIEWDIV_WIDTH + "px";
+    previewDiv.style.height = calculatedSize.height + PREVIEWDIV_HEIGHT + "px";
     previewDiv.style.display = "block";
 
     if(isStreamerOnline(lastHoveredCardEl)) {
         twitchIframe = createIframeElement();
-        twitchIframe.width = calculatedSize.width + "px";
-        twitchIframe.height = calculatedSize.height + "px";
+        twitchIframe.width = calculatedSize.width + PREVIEWDIV_WIDTH + "px";
+        twitchIframe.height = calculatedSize.height + PREVIEWDIV_HEIGHT + "px";
         twitchIframe.src = getPreviewStreamUrl(lastHoveredCardEl);
         previewDiv.style.visibility = "hidden";
         previewDiv.appendChild(twitchIframe);
@@ -96,7 +96,7 @@ function createAndShowDirectoryPreview() {
         clearExistingPreviewDivs(TP_PREVIEW_DIV_CLASSNAME);
     }
 
-    lastHoveredCardEl.parentNode.appendChild(previewDiv);
+    lastHoveredCardEl.parentElement.parentElement.appendChild(previewDiv);
 }
 
 
@@ -247,6 +247,56 @@ function onPreviewModeChange(imagePreviewMode, saveToStorage) {
 }
 
 
+// sets the preview size from google sync
+function setPreviewSizeFromStorage() {
+    if (previewDiv) {
+        clearExistingPreviewDivs(TP_PREVIEW_DIV_CLASSNAME);
+    }
+
+    try {
+        chrome.storage.sync.get('previewSize', function(result) {
+            if (typeof result.previewSize == 'undefined') {
+                setPreviewSize(getCalculatedPreviewSizeByWidth(PREVIEWDIV_WIDTH));
+            } else {
+                setPreviewSize(result.previewSize);
+            }
+        });
+    } catch (e) {
+        setPreviewSize(getCalculatedPreviewSizeByWidth(PREVIEWDIV_WIDTH));
+    }
+}
+
+
+// get the calculated size
+function getCalculatedPreviewSizeByWidth (width) {
+    return {
+        width: 1 * width,
+        height: 0.5636363636363636 * width
+    };
+}
+
+
+// set the preview size
+function setPreviewSize(previewSizeObj) {
+    PREVIEWDIV_WIDTH = previewSizeObj.width;
+    PREVIEWDIV_HEIGHT = previewSizeObj.height;
+}
+
+
+
+// changes the preview size
+function onPreviewSizeChange(width) {
+    clearExistingPreviewDivs(TP_PREVIEW_DIV_CLASSNAME);
+    var previewSizeObj = getCalculatedPreviewSizeByWidth(width);
+    setPreviewSize(previewSizeObj);
+
+    chrome.storage.sync.set({'previewSize': previewSizeObj}, function() {
+
+    });
+
+}
+
+
 // listens for changes made on the extension popup page
 chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
 
@@ -287,11 +337,12 @@ function ga_report_appStart() {
     }
 }
 
-
 // when the page is fully loaded, run all of the functions
 window.addEventListener('load', (event) => {
     setTimeout(function(){
+        ga_report_appStart();
         setViewMode();
+        setPreviewSizeFromStorage();
         setTitleMutationObserverForDirectoryCardsRefresh()
         refreshDirectoryNavCardsListAndListeners()
     }, 2000);
