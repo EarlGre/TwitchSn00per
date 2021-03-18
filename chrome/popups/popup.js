@@ -57,7 +57,8 @@ function changeVolumeSize(width) {
 
 function setSliderAndViewValues(value) {
     slider.value = value ? value:0;
-    output.innerHTML = slider.value + "px";
+    var trueValue = parseInt(slider.value) + 200;
+    output.innerHTML = trueValue + "px";
 }
 
 function setVolumeValues(value) {
@@ -108,7 +109,7 @@ document.addEventListener('DOMContentLoaded', function () {
     try {
         chrome.storage.sync.get('previewSize', function(result) {
             if (typeof result.previewSize == 'undefined') {
-                setSliderAndViewValues(0);
+                setSliderAndViewValues(220);
             } else {
                 setSliderAndViewValues(result.previewSize.width);
             }
@@ -122,7 +123,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     slider.oninput = function() {
-        output.innerHTML = this.value + "px";
+        var trueValue = parseInt(this.value) + 200;
+        output.innerHTML = trueValue + "px";
     }
 
     volumeslider = document.getElementById("TP_popup_volume_mixer_input_slider");
