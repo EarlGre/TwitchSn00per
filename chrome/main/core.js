@@ -1,26 +1,13 @@
-var isNavBarCollapsed;
 var previewDiv = null;
-var appendContainer;
-var IMAGE_CACHE_TTL_MS = 20000;
 var isImagePreviewMode = true;
 var isDirpEnabled = true;
-var isChannelPointsClickerEnabled = false;
-var channelPointsClickerInterval = null;
 var twitchIframe;
 var PREVIEWDIV_WIDTH = 0;
 var PREVIEWDIV_HEIGHT = 0;
 var isHovering = false;
 var lastHoveredCardEl = null;
 var TP_PREVIEW_DIV_CLASSNAME = "twitch_previews_previewDiv";
-var TP_PIP_DIV_CLASSNAME = "twitch_previews_pip";
-var isPipActive = false;
-var navCardPipBtn;
-var clearOverlaysInterval = null;
 var clearVidPlayInterval = null;
-var isLayoutHorizontallyInverted = null;
-var isMainPlayerError = false;
-var isErrRefreshEnabled = false;
-var errRefreshListenerAlreadySet = false;
 
 function isStreamerOnline(navCardEl) {
     return !!(navCardEl.querySelector('.tw-channel-status-indicator--live') || navCardEl.querySelector('.tw-svg__asset--videorerun') || !navCardEl.querySelector('.side-nav-card__avatar--offline'));
@@ -98,17 +85,20 @@ function createAndShowDirectoryPreview() {
 
     lastHoveredCardEl.parentElement.parentElement.appendChild(previewDiv);
 
-    // if the preview is out of the viewport, then it will not adjust the preview size according to user
-    isOut = isOutOfViewport(twitchIframe);
-    isOut2 = isOutOfViewport(previewDiv);
-    if(isOut2.any) {
-        previewDiv.style.width = calculatedSize.width + "px";
-        previewDiv.style.height = calculatedSize.height + "px";
-
-    }
-    if(isOut.any) {
-        twitchIframe.style.width = calculatedSize.width + "px";
-        twitchIframe.style.height = calculatedSize.height + "px";
+    // if the preview is out of the viewport, shift the preview over to the left
+    isOut = isOutOfViewport(previewDiv);
+    if(isOut.right) {
+        previewDiv.style.left = "-" + (PREVIEWDIV_WIDTH - 6) + "px";
+        
+        // if the preview is out of the viewport on the left or right side, it will default to original size
+        isOut = isOutOfViewport(previewDiv)
+        if (isOut.left) {
+            previewDiv.style.left = "6px";
+            previewDiv.style.width = calculatedSize.width + "px";
+            previewDiv.style.height = calculatedSize.height + "px";
+            twitchIframe.width = calculatedSize.width + "px";
+            twitchIframe.height = calculatedSize.height + "px";
+        }
     }
 }
 
@@ -245,7 +235,6 @@ function setViewMode() {
     }
 }
 
-
 // changes the preview mode and saves it to google storage
 function onPreviewModeChange(imagePreviewMode, saveToStorage) {
     isImagePreviewMode = imagePreviewMode;
@@ -257,7 +246,6 @@ function onPreviewModeChange(imagePreviewMode, saveToStorage) {
         });
     }
 }
-
 
 // sets the preview size from google sync
 function setPreviewSizeFromStorage() {
@@ -278,7 +266,6 @@ function setPreviewSizeFromStorage() {
     }
 }
 
-
 // get the calculated size
 function getCalculatedPreviewSizeByWidth (width) {
     return {
@@ -287,14 +274,11 @@ function getCalculatedPreviewSizeByWidth (width) {
     };
 }
 
-
 // set the preview size
 function setPreviewSize(previewSizeObj) {
     PREVIEWDIV_WIDTH = previewSizeObj.width;
     PREVIEWDIV_HEIGHT = previewSizeObj.height;
 }
-
-
 
 // changes the preview size
 function onPreviewSizeChange(width) {
@@ -352,10 +336,9 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
     }
 });
 
-
 // when the page is fully loaded, run all of the functions
 window.addEventListener('load', (event) => {
-    setTimeout(function(){
+    setTimeout(function() {
         setViewMode();
         setPreviewSizeFromStorage();
         setTitleMutationObserverForDirectoryCardsRefresh()
