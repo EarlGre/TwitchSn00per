@@ -290,6 +290,20 @@ function onPreviewSizeChange(width) {
     });
 }
 
+function setVolumeSizeFromStorage() {
+    try {
+        chrome.storage.sync.get('volume', function(result) {
+            if (typeof result.volume == 'undefined') {
+                setVolumeValues(69);
+            } else {
+                setVolumeValues(result.volume);
+            }
+        });
+    } catch (e) {
+        setVolumeValues(69);
+    }
+}
+
 // changes the volume size
 function setVolumeValues(volume) {
     //PUT CODE IN HERE TO ACTUALLY SET THE VOLUME SIZE
@@ -341,6 +355,7 @@ window.addEventListener('load', (event) => {
     setTimeout(function() {
         setViewMode();
         setPreviewSizeFromStorage();
+        setVolumeSizeFromStorage();
         setTitleMutationObserverForDirectoryCardsRefresh()
         refreshDirectoryNavCardsListAndListeners()
     }, 2000);
