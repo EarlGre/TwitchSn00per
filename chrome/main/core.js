@@ -8,6 +8,7 @@ var isHovering = false;
 var lastHoveredCardEl = null;
 var TP_PREVIEW_DIV_CLASSNAME = "twitch_previews_previewDiv";
 var clearVidPlayInterval = null;
+var volumeLevel = 0;
 
 function isStreamerOnline(navCardEl) {
     return !!(navCardEl.querySelector('.tw-channel-status-indicator--live') || navCardEl.querySelector('.tw-svg__asset--videorerun') || !navCardEl.querySelector('.side-nav-card__avatar--offline'));
@@ -124,8 +125,20 @@ function clearOverlays(navCardEl, isFromDirectory) {
         //  vpo.parentNode.removeChild(vpo);
         var vpo1 = twitchIframe.contentDocument.getElementsByClassName('top-bar tw-absolute tw-flex tw-flex-grow-1 tw-justify-content-between tw-left-0 tw-right-0 tw-top-0')[0];
         var vpo2 = twitchIframe.contentDocument.getElementsByClassName('player-controls__right-control-group tw-align-items-center tw-flex tw-flex-grow-1 tw-justify-content-end')[0];
+        var vpo3 = twitchIframe.contentDocument.getElementsByClassName('volume-slider__slider-container')[0];
         vpo1.parentNode.removeChild(vpo1);
         vpo2.parentNode.removeChild(vpo2);
+        vpo3.parentNode.removeChild(vpo3);
+
+        // event listener to control the volume when the volume button is clicked
+        var muteButton = twitchIframe.contentDocument.getElementsByClassName("ScCoreButton-sc-1qn4ixc-0 ixBesj tw-button-icon tw-button-icon--overlay tw-core-button")[1];
+        var volumeElement = twitchIframe.contentDocument.getElementsByTagName("video")[0];
+        muteButton.addEventListener("click", function() { 
+            setTimeout(() => {
+                volumeElement.volume = volumeLevel / 100;
+            }, 100);
+        });
+
         waitForVidPlayAndShow(navCardEl, isFromDirectory);
     } catch (e) {
 
@@ -306,7 +319,7 @@ function setVolumeSizeFromStorage() {
 
 // changes the volume size
 function setVolumeValues(volume) {
-    //PUT CODE IN HERE TO ACTUALLY SET THE VOLUME SIZE
+    volumeLevel = volume;
 }
 
 // saves the volume size
