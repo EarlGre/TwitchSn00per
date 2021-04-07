@@ -63,12 +63,19 @@ function createAndShowDirectoryPreview() {
     previewDiv.style.display = "block";
 
     if(isStreamerOnline(lastHoveredCardEl)) {
-        twitchIframe = createIframeElement();
-        twitchIframe.width = calculatedSize.width + PREVIEWDIV_WIDTH + "px";
-        twitchIframe.height = calculatedSize.height + PREVIEWDIV_HEIGHT + "px";
-        twitchIframe.src = getPreviewStreamUrl(lastHoveredCardEl);
-        previewDiv.style.visibility = "hidden";
-        previewDiv.appendChild(twitchIframe);
+        previewDiv.style.backgroundImage = getPreviewImageUrl(lastHoveredCardEl);
+        if(isImagePreviewMode) {
+            twitchIframe = createIframeElement();
+            twitchIframe.width = calculatedSize.width + PREVIEWDIV_WIDTH + "px";
+            twitchIframe.height = calculatedSize.height + PREVIEWDIV_HEIGHT + "px";
+            twitchIframe.src = getPreviewStreamUrl(lastHoveredCardEl);
+            previewDiv.style.visibility = "hidden";
+            previewDiv.appendChild(twitchIframe);
+        } else {
+            if (twitchIframe) { // in case its from directory and user in image mode.
+                twitchIframe.style.display = 'none';
+            }
+        }
     } else {
         previewDiv.style.backgroundImage = getPreviewOfflineImageUrl();
         twitchIframe = createIframeElement();
@@ -157,9 +164,9 @@ function setDirectoryMouseOverListeners(navCardEl) {
         isHovering = true;
         lastHoveredCardEl = navCardEl;
 
-        if (isImagePreviewMode == false) {
-            return;
-        }
+        // if (isImagePreviewMode == false) {
+        //     return;
+        // }
 
         createAndShowDirectoryPreview();
 
