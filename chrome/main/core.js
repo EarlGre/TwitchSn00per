@@ -64,18 +64,21 @@ function createAndShowDirectoryPreview() {
 
     if(isStreamerOnline(lastHoveredCardEl)) {
         previewDiv.style.backgroundImage = getPreviewImageUrl(lastHoveredCardEl);
+        twitchIframe = createIframeElement();
         if(isImagePreviewMode) {
-            twitchIframe = createIframeElement();
             twitchIframe.width = calculatedSize.width + PREVIEWDIV_WIDTH + "px";
             twitchIframe.height = calculatedSize.height + PREVIEWDIV_HEIGHT + "px";
             twitchIframe.src = getPreviewStreamUrl(lastHoveredCardEl);
             previewDiv.style.visibility = "hidden";
-            previewDiv.appendChild(twitchIframe);
         } else {
+            twitchIframe.width = calculatedSize.width + "px";
+            twitchIframe.height = calculatedSize.height + "px";
             if (twitchIframe) { // in case its from directory and user in image mode.
                 twitchIframe.style.display = 'none';
+                previewDiv.style.visibility = "block";
             }
         }
+        previewDiv.appendChild(twitchIframe);
     } else {
         previewDiv.style.backgroundImage = getPreviewOfflineImageUrl();
         twitchIframe = createIframeElement();
@@ -149,7 +152,7 @@ function clearOverlays(navCardEl, isFromDirectory) {
         waitForVidPlayAndShow(navCardEl, isFromDirectory);
     } catch (e) {
 
-     }
+    }
 
 }
 
@@ -167,7 +170,6 @@ function setDirectoryMouseOverListeners(navCardEl) {
         // if (isImagePreviewMode == false) {
         //     return;
         // }
-
         createAndShowDirectoryPreview();
 
         setTimeout(function () {
